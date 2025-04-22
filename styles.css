@@ -1,187 +1,249 @@
 body {
-    font-family: Georgia, serif;
+  font-family: 'Merriweather', Georgia, serif;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  font-size: 15px; /* Slightly smaller base font size */
+}
+
+#rssForm {
+  padding: 1rem;
+  background: #f5f5f5;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+textarea {
+  width: 100%;
+  max-width: 600px;
+  height: 100px;
+  font-family: monospace;
+  padding: 0.5rem;
+}
+
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.generate-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.print-btn {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.selection-container {
+  padding: 1rem;
+  background: #f9f9f9;
+  margin-bottom: 1rem;
+}
+
+.feed-section {
+  margin-bottom: 1.5rem;
+}
+
+.article-preview {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-left: 3px solid #eee;
+}
+
+.article-preview:hover {
+  background: #f0f0f0;
+}
+
+.article-preview label {
+  display: block;
+  cursor: pointer;
+  padding-left: 1.5rem;
+}
+
+.article-preview input {
+  margin-left: -1.5rem;
+  vertical-align: top;
+  margin-top: 0.3rem;
+}
+
+.subtitle {
+  color: #555;
+  margin: 0.25rem 0;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+#articleContainer {
+  padding: 0.5in;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Digital version: single column */
+.print-layout {
+  column-count: 1;
+}
+
+.article {
+  break-inside: avoid;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+}
+
+.article:last-child {
+  border-bottom: none;
+}
+
+.article h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+  color: #333;
+}
+
+.article p,
+.article div {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #111;
+}
+
+.article a {
+  font-size: 0.85rem;
+  color: #0077cc;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.article img {
+  width: 100%;
+  height: auto;
+  margin: 0.75rem 0;
+  display: block;
+}
+
+/* Reset any potentially problematic styles that could cause margins */
+.article figure, 
+.article div[style] {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* Print-specific styles */
+@media print {
+  body {
     margin: 0;
     padding: 0;
-    background: #fff;
   }
-  
-  #rssForm {
-    padding: 1rem;
-    background: #f5f5f5;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+
+  #rssForm, #selectionContainer {
+    display: none;
   }
-  
-  textarea {
-    width: 100%;
-    max-width: 600px;
-    height: 100px;
-    font-family: monospace;
-    padding: 0.5rem;
-  }
-  
-  button {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-    max-width: 150px;
-  }
-  
-  .print-btn {
-    margin-top: 0.5rem;
-  }
-  
-  .selection-container {
-    padding: 1rem;
-    background: #f9f9f9;
-    margin-bottom: 1rem;
-  }
-  
-  .feed-section {
-    margin-bottom: 1.5rem;
-  }
-  
-  .article-preview {
-    margin: 0.5rem 0;
-    padding: 0.5rem;
-    border-left: 3px solid #eee;
-  }
-  
-  .article-preview:hover {
-    background: #f0f0f0;
-  }
-  
-  .article-preview label {
-    display: block;
-    cursor: pointer;
-    padding-left: 1.5rem;
-  }
-  
-  .article-preview input {
-    margin-left: -1.5rem;
-    vertical-align: top;
-    margin-top: 0.3rem;
-  }
-  
-  .subtitle {
-    color: #555;
-    margin: 0.25rem 0;
-    font-style: italic;
-  }
-  
-  .generate-btn {
-    margin-top: 1rem;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-  }
-  
+
   #articleContainer {
     padding: 0.5in;
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: none;
+    margin: 0;
   }
-  
-  /* Digital version: single column */
+
   .print-layout {
-    column-count: 1;
+    column-count: 3;
+    column-gap: 1.5rem;
+    column-rule: 1px solid #ccc;
   }
-  
+
   .article {
-    break-inside: avoid;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .article:last-child {
+    break-inside: avoid-page;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
     border-bottom: none;
   }
-  
+
   .article h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.75rem;
-    color: #333;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
   }
   
   .article p,
   .article div {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #111;
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
   
-  .article a {
-    font-size: 0.9rem;
-    color: #0077cc;
-    text-decoration: none;
+  /* Ensure images fill column width in print */
+  .article img {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    border: none !important;
+    padding: 0 !important;
+    height: auto !important;
+    display: block !important;
+    page-break-inside: avoid !important;
+  }
+  
+  /* Target common containers that might have margins */
+  .article figure, 
+  .article figure img,
+  .article div[style],
+  .article p img,
+  .article div img {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Hide any image captions or URLs that might appear */
+  .article figcaption:empty,
+  .article figcaption a[href*=".jpg"],
+  .article figcaption a[href*=".jpeg"],
+  .article figcaption a[href*=".png"],
+  .article figcaption a[href*=".gif"],
+  .article a[href*=".jpg"],
+  .article a[href*=".jpeg"],
+  .article a[href*=".png"],
+  .article a[href*=".gif"] {
+    display: none !important;
+  }
+
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.7rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
     display: inline-block;
   }
-  
-  .article img {
-    width: 100%;
-    height: auto;
-    margin: 0.75rem 0;
-    display: block;
-  }
-  
-  /* Print-specific styles */
-  @media print {
-    body {
-      margin: 0;
-      padding: 0;
-    }
-  
-    #rssForm, #selectionContainer {
-      display: none;
-    }
-  
-    #articleContainer {
-      padding: 0.5in;
-      max-width: none;
-      margin: 0;
-    }
-  
-    .print-layout {
-      column-count: 3;
-      column-gap: 1.5rem;
-      column-rule: 1px solid #ccc;
-    }
-  
-    .article {
-      break-inside: avoid-page;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: none;
-    }
-  
-    .article h2 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .article p,
-    .article div {
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-  
-    a::after {
-      content: " (" attr(href) ")";
-      font-size: 0.75rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      display: inline-block;
-    }
-  }
+}
