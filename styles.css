@@ -24,6 +24,7 @@ textarea {
   height: 100px;
   font-family: monospace;
   padding: 0.5rem;
+  font-size:10px;
 }
 
 .button-row {
