@@ -4,12 +4,13 @@ body {
   padding: 0;
   background: #fff;
   font-size: 15px; /* Slightly smaller base font size */
+  display: flex; /* Ensure toolbar and articleContainer are side by side */
 }
 
 #rssForm {
   padding: 1rem;
   background: #f5f5f5;
-  position: sticky;
+  position: static; /* Removed sticky positioning */
   top: 0;
   z-index: 10;
   display: flex;
@@ -97,8 +98,10 @@ button:disabled {
 
 #articleContainer {
   padding: 0.5in;
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 728px; /* Set maximum width for better readability */
+  margin: 0 auto; /* Adjusted to add 30px to the left margin dynamically */
+  padding-left:90px;
+  flex: 1; /* Allow articleContainer to take up remaining space */
 }
 
 /* Digital version: single column */
@@ -156,6 +159,97 @@ button:disabled {
   width: 100%;
 }
 
+.error-content,
+.button-wrapper{
+  display:none;
+}
+.toolbar {
+  height: 100vh; /* Full height */
+  position: fixed; /* Sticky positioning */
+  top: 0;
+  width: 60px;
+  background-color: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  border-right: 1px solid #ccc;
+}
+
+.toolbar-btn {
+  background: none;
+  border: none;
+  cursor: pointer; /* Change cursor to pointer for toolbar icons */
+  margin: 10px 0;
+  font-size: 20px;
+}
+
+.toolbar-btn input[type="checkbox"] {
+  display: none;
+}
+
+.settings-panel {
+  position: fixed;
+  top: 0;
+  left: 60px;
+  width: 300px;
+  height: 100%;
+  background-color: #fff;
+  border-right: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.settings-panel.hidden {
+  display: none;
+}
+
+/* Hide TikTok failed to load messages */
+iframe[src*="tiktok.com"] {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .toolbar {
+    width: 50px;
+  }
+
+  .settings-panel {
+    width: 250px;
+  }
+
+  #articleContainer {
+    margin-left: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .toolbar {
+    width: 40px;
+  }
+
+  .settings-panel {
+    width: 200px;
+  }
+
+  #articleContainer {
+    margin-left: 240px;
+  }
+}
+
+@media (min-width: 769px) {
+  .settings-panel {
+    position: fixed; /* Reverting to overlapping behavior */
+  }
+
+  #articleContainer {
+    margin-left: 0; /* Reverting to no margin */
+  }
+}
+
 /* Print-specific styles */
 @media print {
   body {
@@ -171,6 +265,13 @@ button:disabled {
     padding: 0.5in;
     max-width: none;
     margin: 0;
+    width: 100%;
+    margin-left: 0 !important; /* Reset margin in print view */
+    padding-left: 0 !important; /* Reset padding in print view */  
+}
+
+  .toolbar, .settings-panel {
+    display: none;
   }
 
   .print-layout {

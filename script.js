@@ -201,7 +201,7 @@ function saveFeeds(feeds) {
         feedEl.className = "feed-section";
         feedEl.innerHTML = `<h3>${feed.feedTitle}</h3>`;
         selectionContainer.appendChild(feedEl);
-  
+    
         feed.items.forEach((item, itemIndex) => {
           const itemEl = document.createElement("div");
           itemEl.className = "article-preview";
@@ -221,13 +221,6 @@ function saveFeeds(feeds) {
         });
       });
   
-      // Add a "Generate Print View" button
-      const printBtn = document.createElement("button");
-      printBtn.textContent = "Generate Print View";
-      printBtn.className = "generate-btn";
-      printBtn.addEventListener("click", () => generatePrintView(feedResults));
-      selectionContainer.appendChild(printBtn);
-  
       // Store feed results for later use
       window.feedResults = feedResults;
   
@@ -236,6 +229,15 @@ function saveFeeds(feeds) {
     }
   });
   
+  // Update the Generate Print View functionality to trigger on checkbox changes
+  const selectionContainer = document.getElementById('selectionContainer');
+  selectionContainer.addEventListener('change', (event) => {
+    if (event.target.type === 'checkbox') {
+      generatePrintView(window.feedResults);
+    }
+  });
+  
+  // Removed the 'Read original' link from the article content
   function generatePrintView(feedResults) {
     const container = document.getElementById("articleContainer");
     container.innerHTML = "";
@@ -255,72 +257,7 @@ function saveFeeds(feeds) {
         el.innerHTML = `
           <h2>${article.title}</h2>
           <div>${article.content}</div>
-          <p><a href="${article.link}" target="_blank" title="${article.link}">Read original</a></p>
         `;
-        
-        // Additional cleanup for the final print view
-        // Apply additional fixes to ensure images display correctly
-        el.querySelectorAll('img').forEach(img => {
-          img.style.width = "100%";
-          img.style.maxWidth = "100%";
-          img.style.height = "auto";
-          img.style.margin = "0.75rem 0";
-          img.style.padding = "0";
-          img.style.border = "none";
-          img.removeAttribute("width");
-          img.removeAttribute("height");
-          
-          // Ensure image is loaded
-          if (!img.complete) {
-            img.onload = () => {
-              // Image loaded successfully
-            };
-            img.onerror = () => {
-              // Try to reload with original src if available
-              const originalSrc = img.getAttribute('data-original-src');
-              if (originalSrc && originalSrc !== img.src) {
-                img.src = originalSrc;
-              }
-            };
-          }
-        });
-        
-        // Remove any standalone image URLs or links to images
-        el.querySelectorAll('a').forEach(link => {
-          const linkText = link.textContent.trim();
-          if ((linkText.match(/\.(jpg|jpeg|png|gif|webp)/i) || linkText.startsWith('http')) && 
-              !link.querySelector('img')) {
-            // Check if it's immediately after an image
-            const prevEl = link.previousElementSibling;
-            if (prevEl && prevEl.tagName === 'IMG') {
-              link.remove();
-            }
-          }
-        });
-        
-        // Remove paragraphs that contain only image URLs
-        el.querySelectorAll('p').forEach(p => {
-          const text = p.textContent.trim();
-          if (text.startsWith('http') && (text.match(/\.(jpg|jpeg|png|gif|webp)/i) || text.includes('image'))) {
-            p.remove();
-          }
-        });
-        
-        // Fix figure and div containers that might affect image display
-        el.querySelectorAll('figure, div').forEach(container => {
-          if (container.querySelector('img')) {
-            container.style.margin = "0";
-            container.style.padding = "0";
-            container.style.width = "100%";
-            container.style.maxWidth = "100%";
-            
-            // Remove figcaptions that are just image URLs
-            const caption = container.querySelector('figcaption');
-            if (caption && caption.textContent.includes('http')) {
-              caption.remove();
-            }
-          }
-        });
         
         container.appendChild(el);
       }
@@ -333,3 +270,30 @@ function saveFeeds(feeds) {
   
   // Initialize form with saved feeds when the page loads
   window.addEventListener('DOMContentLoaded', initForm);
+
+window.addEventListener('DOMContentLoaded', () => {
+  const settingsPanel = document.getElementById('settingsPanel');
+  const articleContainer = document.getElementById('articleContainer');
+
+  if (!settingsPanel.classList.contains('hidden')) {
+    articleContainer.style.marginLeft = `${settingsPanel.offsetWidth}px`;
+  }
+});
+
+document.getElementById('settingsButton').addEventListener('click', () => {
+  const settingsPanel = document.getElementById('settingsPanel');
+  const articleContainer = document.getElementById('articleContainer');
+  settingsPanel.classList.toggle('hidden');
+
+  if (settingsPanel.classList.contains('hidden')) {
+    articleContainer.style.marginLeft = '0';
+  } else {
+    articleContainer.style.marginLeft = `${settingsPanel.offsetWidth}px`;
+  }
+});
+
+document.getElementById('printCheckbox').addEventListener('change', (event) => {
+  if (event.target.checked) {
+    window.print();
+  }
+});

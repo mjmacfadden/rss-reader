@@ -11,15 +11,22 @@
 </head>
 <body>
 
-  <form id="rssForm">
-    <label for="rssInput"><strong>Enter Substack RSS feed URLs (one per line):</strong></label><br>
-    <textarea id="rssInput" placeholder="https://you.substack.com/feed"></textarea><br>
-    <button type="submit">Load Articles</button>
-    <button type="button" onclick="window.print()" class="print-btn">🖨️ Print</button>
-  </form>
+  <div class="toolbar">
+    <button id="settingsButton" class="toolbar-btn">⚙️</button>
+    <label for="printCheckbox" class="toolbar-btn">
+      <input type="checkbox" id="printCheckbox"> 🖨️
+    </label>
+  </div>
 
-  <div id="selectionContainer" class="selection-container"></div>
-  
+  <div id="settingsPanel" class="settings-panel">
+    <form id="rssForm">
+      <label for="rssInput"><strong>Enter Substack RSS feed URLs (one per line):</strong></label><br>
+      <textarea id="rssInput" placeholder="https://you.substack.com/feed"></textarea><br>
+      <button type="submit">Load Articles</button>
+    </form>
+    <div id="selectionContainer" class="selection-container"></div>
+  </div>
+
   <div id="articleContainer" class="print-layout"></div>
 
   <script src="script.js"></script>
