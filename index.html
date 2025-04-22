@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Substack Print Magazine</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <form id="rssForm">
+    <label for="rssInput"><strong>Enter Substack RSS feed URLs (one per line):</strong></label><br>
+    <textarea id="rssInput" placeholder="https://you.substack.com/feed"></textarea><br>
+    <button type="submit">Load Articles</button>
+    <button type="button" onclick="window.print()" class="print-btn">🖨️ Print</button>
+  </form>
+
+  <div id="selectionContainer" class="selection-container"></div>
+  
+  <div id="articleContainer" class="print-layout"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
