@@ -253,9 +253,15 @@ iframe[src*="tiktok.com"] {
 
 /* Print-specific styles */
 @media print {
+  @page {
+    margin: 1in;
+    counter-reset: page 1; /* Start page numbering at 1 */
+  }
+
   body {
     margin: 0;
     padding: 0;
+    counter-reset: page 1; /* Reset page counter for the body */
   }
 
   #rssForm, #selectionContainer {
@@ -269,7 +275,7 @@ iframe[src*="tiktok.com"] {
     width: 100%;
     margin-left: 0 !important; /* Reset margin in print view */
     padding-left: 0 !important; /* Reset padding in print view */  
-}
+  }
 
   .toolbar, .settings-panel {
     display: none;
@@ -286,6 +292,13 @@ iframe[src*="tiktok.com"] {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
     border-bottom: none;
+    position: relative;
+    page-break-before: always; /* Ensure each article starts on a new page */
+    counter-increment: page; /* Increment the page counter for each article */
+  }
+
+  .article:first-child {
+    page-break-before: auto;
   }
 
   .article h2 {
@@ -347,5 +360,23 @@ iframe[src*="tiktok.com"] {
     text-overflow: ellipsis;
     max-width: 100%;
     display: inline-block;
+  }
+
+  .article::after {
+    content: "Page " counter(page);
+    counter-increment: page; /* Increment page counter for each article */
+    position: absolute;
+    bottom: 0.5in;
+    right: 0.5in;
+    font-size: 0.8rem;
+    color: #000;
+  }
+
+  @page {
+    @bottom-right {
+      content: "Page " counter(page);
+      font-size: 0.8rem;
+      color: #000;
+    }
   }
 }

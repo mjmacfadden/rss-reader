@@ -14,6 +14,11 @@ function saveFeeds(feeds) {
     document.getElementById("rssInput").value = feeds.join('\n');
   }
   
+  document.getElementById('articleCount').addEventListener('input', (e) => {
+    const articleCount = e.target.value;
+    localStorage.setItem('articleCount', articleCount); // Save the value immediately when changed
+  });
+
   async function fetchAndParseRSS(url) {
     const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
     const response = await fetch(proxyUrl);
@@ -23,11 +28,12 @@ function saveFeeds(feeds) {
       throw new Error("No items found in feed");
     }
   
-    // Return the first three items
+    const articleCount = parseInt(localStorage.getItem('articleCount')) || 3; // Use saved article count
+  
     return {
       feedTitle: data.feed?.title || "Unknown Feed",
       feedUrl: url,
-      items: data.items.slice(0, 3).map(item => ({
+      items: data.items.slice(0, articleCount).map(item => ({
         title: item.title,
         link: item.link,
         pubDate: item.pubDate,
@@ -280,15 +286,29 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+document.getElementById('feedButton').addEventListener('click', () => {
+  const feedPanel = document.getElementById('feedPanel');
+  const settingsPanel = document.getElementById('settingsPanel');
+
+  // Toggle feed panel visibility
+  feedPanel.classList.toggle('hidden');
+
+  // Ensure settings panel is hidden when feed panel is shown
+  if (!feedPanel.classList.contains('hidden')) {
+    settingsPanel.classList.add('hidden');
+  }
+});
+
 document.getElementById('settingsButton').addEventListener('click', () => {
   const settingsPanel = document.getElementById('settingsPanel');
-  const articleContainer = document.getElementById('articleContainer');
+  const feedPanel = document.getElementById('feedPanel');
+
+  // Toggle settings panel visibility
   settingsPanel.classList.toggle('hidden');
 
-  if (settingsPanel.classList.contains('hidden')) {
-    articleContainer.style.marginLeft = '0';
-  } else {
-    articleContainer.style.marginLeft = `${settingsPanel.offsetWidth}px`;
+  // Ensure feed panel is hidden when settings panel is shown
+  if (!settingsPanel.classList.contains('hidden')) {
+    feedPanel.classList.add('hidden');
   }
 });
 
@@ -296,4 +316,10 @@ document.getElementById('printCheckbox').addEventListener('change', (event) => {
   if (event.target.checked) {
     window.print();
   }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const articleCountInput = document.getElementById('articleCount');
+  const savedArticleCount = localStorage.getItem('articleCount') || 3;
+  articleCountInput.value = savedArticleCount; // Ensure the input value matches the saved value
 });

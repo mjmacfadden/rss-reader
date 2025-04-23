@@ -12,19 +12,27 @@
 <body>
 
   <div class="toolbar">
+    <button id="feedButton" class="toolbar-btn">📄</button>
     <button id="settingsButton" class="toolbar-btn">⚙️</button>
     <label for="printCheckbox" class="toolbar-btn">
       <input type="checkbox" id="printCheckbox"> 🖨️
     </label>
   </div>
 
-  <div id="settingsPanel" class="settings-panel">
+  <div id="feedPanel" class="settings-panel">
     <form id="rssForm">
       <label for="rssInput"><strong>Enter Substack RSS feed URLs (one per line):</strong></label><br>
       <textarea id="rssInput" placeholder="https://you.substack.com/feed"></textarea><br>
       <button type="submit">Load Articles</button>
     </form>
     <div id="selectionContainer" class="selection-container"></div>
+  </div>
+
+  <div id="settingsPanel" class="settings-panel hidden">
+    <form id="settingsForm">
+      <label for="articleCount"><strong>Number of articles to load per feed:</strong></label><br>
+      <input type="number" id="articleCount" name="articleCount" min="1" value="3"><br>
+    </form>
   </div>
 
   <div id="articleContainer" class="print-layout"></div>
