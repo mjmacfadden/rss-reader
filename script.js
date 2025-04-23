@@ -323,3 +323,151 @@ document.addEventListener('DOMContentLoaded', () => {
   const savedArticleCount = localStorage.getItem('articleCount') || 3;
   articleCountInput.value = savedArticleCount; // Ensure the input value matches the saved value
 });
+
+// Ensure the existing textarea in the HTML is used
+const directUrlInput = document.getElementById('directUrlInput');
+
+// Update the event listener to save direct URLs to a separate local storage variable
+directUrlInput.addEventListener('input', () => {
+  const directUrls = directUrlInput.value
+    .split('\n')
+    .map(url => url.trim())
+    .filter(Boolean);
+
+  // Save direct URLs to a separate local storage variable
+  localStorage.setItem('directUrls', JSON.stringify(directUrls));
+});
+
+// Update the logic to truncate direct URLs after '.com/'
+function normalizeUrl(url) {
+  try {
+    const urlObj = new URL(url);
+    const pathParts = urlObj.pathname.split('/');
+
+    // Keep only the base path (e.g., https://example.com/)
+    if (pathParts.length > 1) {
+      urlObj.pathname = '/';
+    }
+
+    if (!urlObj.pathname.endsWith('/feed')) {
+      urlObj.pathname = urlObj.pathname.replace(/\/$/, '') + '/feed';
+    }
+
+    return urlObj.toString();
+  } catch {
+    return url; // Return the original URL if it's invalid
+  }
+}
+
+// Update the form submission to apply truncation to direct URLs
+const loadArticlesButton = document.getElementById('rssForm').querySelector('button[type="submit"]');
+
+loadArticlesButton.addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  const rssInput = document.getElementById('rssInput');
+  const directUrlInput = document.getElementById('directUrlInput');
+
+  const feeds = rssInput.value
+    .split("\n")
+    .map(url => url.trim())
+    .filter(Boolean)
+    .map(normalizeUrl);
+
+  const directUrls = directUrlInput.value
+    .split("\n")
+    .map(url => url.trim())
+    .filter(Boolean)
+    .map(url => {
+      try {
+        const urlObj = new URL(url);
+        // Truncate after '.com/'
+        urlObj.pathname = '/';
+        return {
+          originalUrl: url,
+          feedUrl: normalizeUrl(urlObj.toString())
+        };
+      } catch {
+        return null;
+      }
+    })
+    .filter(Boolean);
+
+  const allFeeds = directUrls.concat(feeds.map(feed => ({ feedUrl: feed, originalUrl: null })));
+
+  // Save only RSS feeds (excluding direct URLs) to local storage
+  saveFeeds(feeds);
+
+  const container = document.getElementById('articleContainer');
+  const selectionContainer = document.getElementById('selectionContainer');
+
+  selectionContainer.innerHTML = "<h2>Select articles to print</h2><div id='loading'>Loading feeds...</div>";
+  container.innerHTML = "";
+
+  try {
+    const feedResults = await Promise.all(allFeeds.map(async ({ feedUrl, originalUrl }) => {
+      const feed = await fetchAndParseRSS(feedUrl);
+
+      if (originalUrl) {
+        // Filter the feed items to include only the specific article
+        feed.items = feed.items.filter(item => item.link === originalUrl);
+      }
+
+      return feed;
+    }));
+
+    document.getElementById('loading').remove();
+
+    feedResults.forEach((feed, feedIndex) => {
+      const feedEl = document.createElement('div');
+      feedEl.className = 'feed-section';
+      feedEl.innerHTML = `<h3>${feed.feedTitle}</h3>`;
+      selectionContainer.appendChild(feedEl);
+
+      feed.items.forEach((item, itemIndex) => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'article-preview';
+
+        const checkboxId = `article-${feedIndex}-${itemIndex}`;
+
+        itemEl.innerHTML = `
+          <input type="checkbox" id="${checkboxId}" data-feed="${feedIndex}" data-item="${itemIndex}">
+          <label for="${checkboxId}">
+            <strong>${item.title}</strong>
+            <p class="subtitle">${item.subtitle}</p>
+            <small>${new Date(item.pubDate).toLocaleDateString()}</small>
+          </label>
+        `;
+
+        feedEl.appendChild(itemEl);
+      });
+    });
+
+    // Store feed results for later use
+    window.feedResults = feedResults;
+
+  } catch (err) {
+    selectionContainer.innerHTML = `<p style="color:red;">⚠️ Failed to load one or more feeds: ${err.message}</p>`;
+  }
+});
+
+// Update the event listener to handle deletions from the text area
+const rssInput = document.getElementById('rssInput');
+rssInput.addEventListener('input', () => {
+  const feeds = rssInput.value
+    .split('\n')
+    .map(url => url.trim())
+    .filter(Boolean);
+
+  // Save updated feeds to local storage
+  saveFeeds(feeds);
+});
+
+// Initialize the form with saved direct URLs
+function initDirectUrls() {
+  const directUrls = JSON.parse(localStorage.getItem('directUrls')) || [];
+  document.getElementById('directUrlInput').value = directUrls.join('\n');
+}
+
+// Call the initialization function for direct URLs
+window.addEventListener('DOMContentLoaded', initDirectUrls);
