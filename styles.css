@@ -255,13 +255,17 @@ iframe[src*="tiktok.com"] {
 @media print {
   @page {
     margin: 1in;
-    counter-reset: page 1; /* Start page numbering at 1 */
+
+    @bottom-right {
+      content: "Page " counter(page);
+      font-size: 0.8rem;
+      color: #000;
+    }
   }
 
   body {
     margin: 0;
     padding: 0;
-    counter-reset: page 1; /* Reset page counter for the body */
   }
 
   #rssForm, #selectionContainer {
@@ -294,7 +298,6 @@ iframe[src*="tiktok.com"] {
     border-bottom: none;
     position: relative;
     page-break-before: always; /* Ensure each article starts on a new page */
-    counter-increment: page; /* Increment the page counter for each article */
   }
 
   .article:first-child {
@@ -363,20 +366,10 @@ iframe[src*="tiktok.com"] {
   }
 
   .article::after {
-    content: "Page " counter(page);
-    counter-increment: page; /* Increment page counter for each article */
-    position: absolute;
-    bottom: 0.5in;
-    right: 0.5in;
-    font-size: 0.8rem;
-    color: #000;
+    content: none; /* Remove conflicting page number content */
   }
 
-  @page {
-    @bottom-right {
-      content: "Page " counter(page);
-      font-size: 0.8rem;
-      color: #000;
-    }
+  body::after {
+    content: none; /* Removed debugging marker */
   }
 }
