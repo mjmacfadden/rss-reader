@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSS Reader - Bootstrap 5</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="appStyles.css">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="panel-open">
+    <div class="toolbar d-flex flex-column flex-shrink-0 p-3">
+        <a href="#" id="toggleFeedPanel" class="d-block mb-3 text-decoration-none text-center">
+            <i class="bi bi-file-earmark-text-fill fs-4"></i>
+        </a>
+        <a href="#" id="toggleSettingsPanel" class="d-block mb-3 text-decoration-none text-center">
+            <i class="bi bi-gear-fill fs-4"></i>
+        </a>
+        <a href="#" id="printButton" class="d-block mb-3 text-decoration-none text-center">
+            <i class="bi bi-printer-fill fs-4"></i>
+        </a>
+    </div>
+
+    <div id="feedPanel" class="p-4">
+        <h2>RSS Feed</h2>
+        <form id="rssForm">
+            <div class="mb-3">
+                <label for="rssInput" class="form-label">Enter Substack RSS feed URLs (one per line):</label>
+                <textarea id="rssInput" class="form-control" placeholder="https://you.substack.com/feed"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="directUrlInput" class="form-label">Enter specific article URLs (one per line):</label>
+                <textarea id="directUrlInput" class="form-control" placeholder="Enter specific article URLs here"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Load Articles</button>
+        </form>
+        <div id="selectionContainer" class="mt-4"></div>
+    </div>
+
+    <div id="settingsPanel" class="p-4 d-none">
+        <h2>Settings</h2>
+        <form id="settingsForm">
+            <div class="mb-3">
+                <label for="articleCount" class="form-label">Number of articles to load per feed:</label>
+                <input type="number" id="articleCount" name="articleCount" class="form-control" min="1" value="3">
+            </div>
+        </form>
+    </div>
+
+    <div id="articleContainer" class="mt-4 article"></div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="appScript.js"></script>
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+</body>
+</html>
