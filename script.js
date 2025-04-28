@@ -28,16 +28,17 @@ function saveFeeds(feeds) {
       throw new Error("No items found in feed");
     }
   
-    const articleCount = parseInt(localStorage.getItem('articleCount')) || 3; // Use saved article count
+    const articleCount = parseInt(localStorage.getItem('articleCount')) || 3;
   
     return {
       feedTitle: data.feed?.title || "Unknown Feed",
+      feedAuthor: data.feed?.author || "Unknown Author",
       feedUrl: url,
       items: data.items.slice(0, articleCount).map(item => ({
         title: item.title,
+        author: item.author || data.feed?.author,
         link: item.link,
         pubDate: item.pubDate,
-        // Extract subtitle or use beginning of content
         subtitle: extractSubtitle(item.content || item.description),
         content: cleanHTML(item.content || item.description)
       }))
@@ -202,12 +203,31 @@ function saveFeeds(feeds) {
       const feedResults = await Promise.all(feeds.map(fetchAndParseRSS));
       document.getElementById("loading").remove();
       
+      const feedInfoContainer = document.getElementById("feedInfo");
+      feedInfoContainer.innerHTML = "<h2>Feed Information</h2>";
+      
       feedResults.forEach((feed, feedIndex) => {
+        // Add feed info to the feed panel
+        const feedInfoItem = document.createElement("div");
+        feedInfoItem.className = "feed-info-item";
+        feedInfoItem.innerHTML = `
+          <div class="feed-info-title">${feed.feedTitle}</div>
+          <div class="feed-info-author">by ${feed.feedAuthor}</div>
+        `;
+        feedInfoContainer.appendChild(feedInfoItem);
+
+        // Create feed section in selection container
         const feedEl = document.createElement("div");
         feedEl.className = "feed-section";
-        feedEl.innerHTML = `<h3>${feed.feedTitle}</h3>`;
+        feedEl.innerHTML = `
+          <div class="feed-header">
+            <h3 class="feed-title">${feed.feedTitle}</h3>
+            <div class="feed-meta">
+              <div class="feed-author">${feed.feedAuthor}</div>
+            </div>
+          </div>`;
         selectionContainer.appendChild(feedEl);
-    
+        
         feed.items.forEach((item, itemIndex) => {
           const itemEl = document.createElement("div");
           itemEl.className = "article-preview";
@@ -249,7 +269,6 @@ function saveFeeds(feeds) {
     container.innerHTML = "";
     let hasContent = false;
   
-    // Get all checked articles
     document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
       const feedIndex = parseInt(checkbox.dataset.feed);
       const itemIndex = parseInt(checkbox.dataset.item);
@@ -257,12 +276,20 @@ function saveFeeds(feeds) {
       if (feedResults && feedResults[feedIndex] && feedResults[feedIndex].items[itemIndex]) {
         hasContent = true;
         const article = feedResults[feedIndex].items[itemIndex];
+        const feed = feedResults[feedIndex];
         
         const el = document.createElement("div");
         el.className = "article";
         el.innerHTML = `
-          <h2>${article.title}</h2>
-          <div>${article.content}</div>
+          <div class="publication-header">
+            <h1 class="publication-title">${feed.feedTitle}</h1>
+            <div class="publication-author">by ${feed.feedAuthor}</div>
+          </div>
+          <h2 class="article-title">${article.title}</h2>
+          <div class="article-meta">
+            <span class="article-author">By ${article.author || feed.feedAuthor}</span>
+          </div>
+          <div class="article-content">${article.content}</div>
         `;
         
         container.appendChild(el);
@@ -421,7 +448,13 @@ loadArticlesButton.addEventListener('click', async (e) => {
     feedResults.forEach((feed, feedIndex) => {
       const feedEl = document.createElement('div');
       feedEl.className = 'feed-section';
-      feedEl.innerHTML = `<h3>${feed.feedTitle}</h3>`;
+      feedEl.innerHTML = `
+        <div class="feed-header">
+          <h3 class="feed-title">${feed.feedTitle}</h3>
+          <div class="feed-meta">
+            <div class="feed-author">${feed.feedAuthor}</div>
+          </div>
+        </div>`;
       selectionContainer.appendChild(feedEl);
 
       feed.items.forEach((item, itemIndex) => {
