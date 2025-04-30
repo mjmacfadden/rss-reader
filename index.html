@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Mike's Substack Printer App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- BOOTSTRAP ICOND -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <!-- Import Google Font Merriweather -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,15 +14,20 @@
 </head>
 <body>
 
-  <div class="toolbar">
-    <button id="feedButton" class="toolbar-btn">📄</button>
-    <button id="settingsButton" class="toolbar-btn">⚙️</button>
+  <div class="hello_bar">
+    <span>This app doesn't really work on mobile.</span>
+    <button class="close-hello-bar">X</button>
+  </div>
+
+  <div class="toolbar hb_adjust">
+    <button id="feedButton" class="toolbar-btn"><i class="bi bi-file-earmark-fill"></i></button>
+    <button id="settingsButton" class="toolbar-btn"><i class="bi bi-gear-fill"></i></button>
     <label for="printCheckbox" class="toolbar-btn">
-      <input type="checkbox" id="printCheckbox"> 🖨️
+      <input type="checkbox" id="printCheckbox"> <i class="bi bi-printer-fill"></i>
     </label>
   </div>
 
-  <div id="feedPanel" class="settings-panel">
+  <div id="feedPanel" class="settings-panel hb_adjust">
     <form id="rssForm">
       <label for="rssInput"><strong>Enter Substack RSS feed URLs (one per line):</strong></label><br>
       <textarea id="rssInput" placeholder="https://you.substack.com/feed"></textarea><br>
@@ -32,14 +39,14 @@
     <div id="selectionContainer" class="selection-container"></div>
   </div>
 
-  <div id="settingsPanel" class="settings-panel hidden">
+  <div id="settingsPanel" class="settings-panel hidden hb_adjust">
     <form id="settingsForm">
       <label for="articleCount"><strong>Number of articles to load per feed:</strong></label><br>
       <input type="number" id="articleCount" name="articleCount" min="1" value="3"><br>
     </form>
   </div>
 
-  <div id="articleContainer" class="print-layout"></div>
+  <div id="articleContainer" class="print-layout hb_adjust"></div>
 
   <script src="script.js"></script>
 </body>

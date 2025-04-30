@@ -504,3 +504,30 @@ function initDirectUrls() {
 
 // Call the initialization function for direct URLs
 window.addEventListener('DOMContentLoaded', initDirectUrls);
+
+document.querySelector('.close-hello-bar').addEventListener('click', function() {
+  const helloBar = document.querySelector('.hello_bar');
+  helloBar.style.display = 'none';
+
+  // Remove hb_adjust class from all elements
+  document.querySelectorAll('.hb_adjust').forEach(element => {
+    element.classList.remove('hb_adjust');
+  });
+});
+
+// Add event listeners to toolbar buttons to handle active state
+const toolbarButtons = document.querySelectorAll('.toolbar-btn');
+
+toolbarButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    // Remove active state from all buttons
+    toolbarButtons.forEach(btn => btn.style.color = '#999');
+
+    // Toggle active state for the clicked button
+    if (button.style.color === 'rgb(102, 102, 102)') { // #666 in RGB
+      button.style.color = '#999';
+    } else {
+      button.style.color = '#666';
+    }
+  });
+});
