@@ -550,3 +550,15 @@ toolbarButtons.forEach(button => {
     }
   });
 });
+
+// Modal logic for Substack subscribe form
+setTimeout(() => {
+  const modal = document.getElementById('substackModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+  }
+}, 5000);
+
+document.getElementById('closeModalBtn').addEventListener('click', () => {
+  document.getElementById('substackModal').classList.add('hidden');
+});
