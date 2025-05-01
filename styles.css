@@ -23,6 +23,9 @@ body {
   justify-content:center;
   z-index:1000;
 }
+.hello_bar span{
+  margin-left:10px;
+}
 .close-hello-bar{
   position:absolute;
   right:10px;
@@ -263,6 +266,8 @@ iframe[src*="tiktok.com"] {
   #articleContainer {
     margin-left: 300px;
   }
+.hello_bar span{
+  display: none;}
 }
 
 @media (max-width: 480px) {
