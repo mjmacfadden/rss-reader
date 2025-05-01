@@ -316,26 +316,45 @@ window.addEventListener('DOMContentLoaded', () => {
 document.getElementById('feedButton').addEventListener('click', () => {
   const feedPanel = document.getElementById('feedPanel');
   const settingsPanel = document.getElementById('settingsPanel');
+  const instructionsPanel = document.getElementById('instructionsPanel');
 
   // Toggle feed panel visibility
   feedPanel.classList.toggle('hidden');
 
-  // Ensure settings panel is hidden when feed panel is shown
+  // Ensure settings and instructions panels are hidden when feed panel is shown
   if (!feedPanel.classList.contains('hidden')) {
     settingsPanel.classList.add('hidden');
+    instructionsPanel.classList.add('hidden');
   }
 });
 
 document.getElementById('settingsButton').addEventListener('click', () => {
   const settingsPanel = document.getElementById('settingsPanel');
   const feedPanel = document.getElementById('feedPanel');
+  const instructionsPanel = document.getElementById('instructionsPanel');
 
   // Toggle settings panel visibility
   settingsPanel.classList.toggle('hidden');
 
-  // Ensure feed panel is hidden when settings panel is shown
+  // Ensure feed and instructions panels are hidden when settings panel is shown
   if (!settingsPanel.classList.contains('hidden')) {
     feedPanel.classList.add('hidden');
+    instructionsPanel.classList.add('hidden');
+  }
+});
+
+document.getElementById('instructionsButton').addEventListener('click', () => {
+  const instructionsPanel = document.getElementById('instructionsPanel');
+  const feedPanel = document.getElementById('feedPanel');
+  const settingsPanel = document.getElementById('settingsPanel');
+
+  // Toggle instructions panel visibility
+  instructionsPanel.classList.toggle('hidden');
+
+  // Hide other panels when instructions panel is shown
+  if (!instructionsPanel.classList.contains('hidden')) {
+    feedPanel.classList.add('hidden');
+    settingsPanel.classList.add('hidden');
   }
 });
 

@@ -22,6 +22,7 @@
   <div class="toolbar hb_adjust">
     <button id="feedButton" class="toolbar-btn"><i class="bi bi-file-earmark-fill"></i></button>
     <button id="settingsButton" class="toolbar-btn"><i class="bi bi-gear-fill"></i></button>
+    <button id="instructionsButton" class="toolbar-btn" title="Instructions"><i class="bi bi-question-circle-fill"></i></button>
     <label for="printCheckbox" class="toolbar-btn">
       <input type="checkbox" id="printCheckbox"> <i class="bi bi-printer-fill"></i>
     </label>
@@ -44,6 +45,22 @@
       <label for="articleCount"><strong>Number of articles to load per feed:</strong></label><br>
       <input type="number" id="articleCount" name="articleCount" min="1" value="3"><br>
     </form>
+  </div>
+
+  <div id="instructionsPanel" class="settings-panel hidden hb_adjust">
+    <h2><i class="bi bi-question-circle-fill"></i> How to Use This App</h2>
+    <ol>
+      <li>Enter one or more Substack RSS feed URLs (one per line) in the first box. Example: <code>https://you.substack.com/feed</code></li>
+      <li>Optionally, enter specific article URLs (one per line) in the second box to load individual articles.</li>
+      <li>Click <strong>Load Articles</strong> to fetch and display articles.</li>
+      <li>Use the <strong>gear</strong> icon to set how many articles to load per feed.</li>
+      <li>Check the <strong>printer</strong> icon to enable print-friendly layout.</li>
+      <li>Click the <strong>file</strong> icon to return to the feed input panel.</li>
+      <li>Click the <strong>question mark</strong> icon (this panel) to view instructions.</li>
+    </ol>
+    <p><strong>Note:</strong> This app works best on desktop browsers.</p>
+
+
   </div>
 
   <div id="articleContainer" class="print-layout hb_adjust"></div>
