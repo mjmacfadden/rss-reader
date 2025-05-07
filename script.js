@@ -19,7 +19,7 @@ function saveFeeds(feeds) {
     localStorage.setItem('articleCount', articleCount); // Save the value immediately when changed
   });
 
-  async function fetchAndParseRSS(url) {
+  async function fetchAndParseRSS(url, fetchAll = false) {
     const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
     const response = await fetch(proxyUrl);
     const data = await response.json();
@@ -28,7 +28,8 @@ function saveFeeds(feeds) {
       throw new Error("No items found in feed");
     }
   
-    const articleCount = parseInt(localStorage.getItem('articleCount')) || 3;
+    // If fetchAll is true, do not limit the number of articles
+    const articleCount = fetchAll ? data.items.length : (parseInt(localStorage.getItem('articleCount')) || 3);
   
     return {
       feedTitle: data.feed?.title || "Unknown Feed",
@@ -452,7 +453,8 @@ loadArticlesButton.addEventListener('click', async (e) => {
 
   try {
     const feedResults = await Promise.all(allFeeds.map(async ({ feedUrl, originalUrl }) => {
-      const feed = await fetchAndParseRSS(feedUrl);
+      // If this is a direct article, fetch all articles from the feed
+      const feed = await fetchAndParseRSS(feedUrl, !!originalUrl);
 
       if (originalUrl) {
         // Filter the feed items to include only the specific article
